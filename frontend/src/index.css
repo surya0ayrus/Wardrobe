@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter'; /* self-hosted font: fast, works offline */
+
+/* "dark:" utilities follow the .dark class on <html> (set from the user's theme choice). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Colour tokens. Components use these names (bg-card, text-ink, border-border …),
+ * so light / dark is switched here in one place instead of in every component.
+ * Brand colours: change primary / secondary / accent / brand-dark to rebrand the app.
+ */
+@theme {
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca; /* button hover background */
+  --color-primary-ink: #4338ca; /* primary-coloured text / icons, readable on the page background */
+  --color-primary-soft: #eef2ff; /* light primary backgrounds (active chips, badges) */
+  --color-brand-dark: #1e293b; /* dark brand surfaces (login background) */
+  --color-accent: #818cf8; /* accents only, too light for text */
+  --color-secondary: #0ea5e9;
+
+  --color-ink: #1e293b; /* main text */
+  --color-muted: #64748b; /* secondary text */
+  --color-surface: #f8fafc; /* page background */
+  --color-subtle: #f1f5f9; /* hover / quiet fills */
+  --color-card: #ffffff; /* cards, inputs, dialogs */
+  --color-border: #e2e8f0;
+
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+
+  /* Dashboard charts: checked for colour-blind separation and contrast on the card. */
+  --color-chart-trend: #4f46e5; /* one-series bars */
+  --color-chart-1: #2a78d6; /* categories, in this order: blue */
+  --color-chart-2: #eb6834; /* orange */
+  --color-chart-3: #1baf7a; /* aqua; 3–5 are pale on white, so always shown with a labelled count */
+  --color-chart-4: #eda100; /* yellow */
+  --color-chart-5: #e87ba4; /* magenta */
+  --color-chart-6: #008300; /* green */
+  --color-chart-7: #4a3aa7; /* violet */
+  --color-chart-neutral: #cbd5e1; /* "Other", "None" */
+
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dark {
+  --color-primary-ink: #a5b4fc;
+  --color-primary-soft: rgb(79 70 229 / 0.2);
+  --color-brand-dark: #0f172a;
+
+  --color-ink: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-surface: #0b1120;
+  --color-subtle: #1e293b;
+  --color-card: #111827;
+  --color-border: #273449;
+
+  --color-chart-trend: #6366f1;
+  --color-chart-1: #3987e5;
+  --color-chart-2: #d95926;
+  --color-chart-3: #199e70;
+  --color-chart-4: #c98500;
+  --color-chart-5: #d55181;
+  --color-chart-6: #008300;
+  --color-chart-7: #9085e9;
+  --color-chart-neutral: #334155;
+
+  /* Native controls (date pickers, select lists, scrollbars) in dark too. */
+  color-scheme: dark;
+}
+
+/* Force the light palette inside an element, even in dark mode (login card). */
+.theme-light {
+  --color-primary-ink: #4338ca;
+  --color-primary-soft: #eef2ff;
+  --color-ink: #1e293b;
+  --color-muted: #64748b;
+  --color-surface: #f8fafc;
+  --color-subtle: #f1f5f9;
+  --color-card: #ffffff;
+  --color-border: #e2e8f0;
+  color: var(--color-ink);
+  color-scheme: light;
+}
+
+/* Card look used across the app: hairline border + soft layered shadow. */
+@utility card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.05);
+}
+
+.dark .card {
+  box-shadow: none;
+}
+
+/* Loading placeholder with a soft shimmer. */
+@utility skeleton {
+  border-radius: 0.375rem;
+  background: linear-gradient(90deg, var(--color-subtle) 25%, var(--color-border) 50%, var(--color-subtle) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/*
+ * Gentle fade when a page or dialog opens.
+ * Opacity only, on purpose: an animated transform would turn the page into the
+ * positioning box for "position: fixed" children, and dropdown menus / calendars
+ * (which are fixed) would open in the wrong place.
+ */
+@utility animate-page {
+  animation: page-in 0.2s ease-out;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes page-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton, .animate-page { animation: none; }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-ink antialiased;
+    font-feature-settings: 'cv11', 'ss01'; /* Inter: cleaner 1, a and l */
+  }
+
+  h1, h2, h3 {
+    letter-spacing: -0.015em;
+  }
+
+  /* Hand cursor on everything clickable (Tailwind 4 no longer does this for buttons). */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  a[href],
+  select:not(:disabled),
+  summary,
+  label:has(input[type='checkbox'], input[type='radio']),
+  input[type='checkbox']:not(:disabled),
+  input[type='radio']:not(:disabled),
+  input[type='file']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  :disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Calendar (react-day-picker) in app colours, light + dark.
+   "html .rdp-root" so these win over the library's own stylesheet, which loads later. */
+html .rdp-root {
+  --rdp-accent-color: var(--color-primary);
+  --rdp-accent-background-color: var(--color-primary-soft);
+  --rdp-today-color: var(--color-primary-ink);
+  --rdp-day-height: 40px;
+  --rdp-day-width: 40px;
+  --rdp-day_button-height: 38px;
+  --rdp-day_button-width: 38px;
+  --rdp-selected-border: 2px solid var(--color-primary);
+  font-size: 0.875rem;
+}
+
+.rdp-root .rdp-selected .rdp-day_button {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.rdp-root .rdp-day_button:hover:not([disabled]) {
+  background: var(--color-surface);
+}
+
+.rdp-root .rdp-selected .rdp-day_button:hover {
+  background: var(--color-primary-hover);
+}
+
+.rdp-root .rdp-dropdown_root,
+.rdp-root .rdp-caption_label {
+  font-weight: 600;
+}
+
+.rdp-root .rdp-dropdown_root:hover {
+  background: var(--color-surface);
+  border-radius: 0.375rem;
+}
+
+.rdp-root .rdp-chevron {
+  fill: var(--color-primary-ink);
+}

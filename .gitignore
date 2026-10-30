@@ -1,0 +1,15 @@
+# Environment files
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+
+# PHP dependencies
+backend/vendor/
+
+# Node dependencies
+frontend/node_modules/
+
+# Build output
+frontend/dist/

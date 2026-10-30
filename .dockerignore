@@ -1,0 +1,25 @@
+# Keep the build context small and never ship local secrets.
+**/.git
+**/.env
+**/.env.*
+!backend/.env.example
+**/node_modules
+**/.DS_Store
+.claude
+.vscode
+.idea
+*.md
+
+backend/vendor
+backend/tests
+backend/phpunit.xml
+backend/.phpunit.result.cache
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/app/public/*
+backend/bootstrap/cache/*.php
+backend/public/storage
+
+frontend/dist
