@@ -18,6 +18,9 @@ export function AuthProvider({ children }) {
     [queryClient],
   )
 
+
+  
+
   const { data: session, isLoading } = useQuery({
     queryKey: ['session'],
     queryFn: () => api.get('/auth/me').then((res) => res.data).catch(() => null),
