@@ -1,18 +1,16 @@
 # Web server inside the container.
-# /api, /sanctum and /up go to Laravel (PHP-FPM); everything else is the React app.
+# /api, /sanctum and /up go to the Python API (uvicorn); everything else is the React app.
 :{$PORT:8080} {
-	root * /var/www/html/public
+	root * /app/public
 	encode zstd gzip
 
 	request_body {
 		max_size 25MB
 	}
 
-	@laravel path /api/* /sanctum/* /up
-	handle @laravel {
-		php_fastcgi 127.0.0.1:9000 {
-			trusted_proxies private_ranges
-		}
+	@api path /api/* /sanctum/* /up
+	handle @api {
+		reverse_proxy 127.0.0.1:9000
 	}
 
 	# Built JS / CSS files have a hash in their name: cache them for a year.

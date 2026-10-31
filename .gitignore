@@ -2,14 +2,13 @@
 .env
 .env.*
 !.env.example
-backend/.env
-frontend/.env
 
-# PHP dependencies
-backend/vendor/
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
 
-# Node dependencies
+# Node
 frontend/node_modules/
-
-# Build output
 frontend/dist/

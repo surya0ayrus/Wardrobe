@@ -1,4 +1,3 @@
-# Keep the build context small and never ship local secrets.
 **/.git
 **/.env
 **/.env.*
@@ -9,17 +8,8 @@
 .vscode
 .idea
 *.md
-
-backend/vendor
+**/__pycache__
+**/.venv
 backend/tests
-backend/phpunit.xml
-backend/.phpunit.result.cache
-backend/storage/logs/*
-backend/storage/framework/cache/*
-backend/storage/framework/sessions/*
-backend/storage/framework/views/*
-backend/storage/app/public/*
-backend/bootstrap/cache/*.php
-backend/public/storage
-
+backend/.pytest_cache
 frontend/dist

@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Backend: install", "type": "shell", "options": { "cwd": "${workspaceFolder}/backend" },
+      "command": "python -m venv .venv && .venv/bin/pip install -r requirements-dev.txt" },
+    { "label": "Backend: migrate + seed", "type": "shell", "options": { "cwd": "${workspaceFolder}/backend" },
+      "command": ".venv/bin/alembic upgrade head && .venv/bin/python -m app.seed" },
+    { "label": "Backend: tests", "type": "shell", "options": { "cwd": "${workspaceFolder}/backend" },
+      "command": ".venv/bin/pytest", "group": "test" }
+  ]
+}
